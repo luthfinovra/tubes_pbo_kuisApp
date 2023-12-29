@@ -4,6 +4,8 @@
 
 package com.mycompany.kuisapp;
 
+import com.mycompany.kuisapp.view.HomeView;
+
 /**
  *
  * @author LUTHFI NOVRA
@@ -11,6 +13,8 @@ package com.mycompany.kuisapp;
 public class KuisApp {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        HomeView app = new HomeView();
+        app.setLocationRelativeTo(null);
+        app.setVisible(true);
     }
 }

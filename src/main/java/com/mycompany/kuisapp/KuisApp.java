@@ -4,7 +4,10 @@
 
 package com.mycompany.kuisapp;
 
+import com.mycompany.kuisapp.model.GuruModel;
+import com.mycompany.kuisapp.model.SiswaModel;
 import com.mycompany.kuisapp.view.HomeView;
+import java.sql.SQLException;
 
 /**
  *
@@ -12,7 +15,9 @@ import com.mycompany.kuisapp.view.HomeView;
  */
 public class KuisApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        GuruModel guruModel = new GuruModel();
+        SiswaModel siswaModel = new SiswaModel();
         HomeView app = new HomeView();
         app.setLocationRelativeTo(null);
         app.setVisible(true);

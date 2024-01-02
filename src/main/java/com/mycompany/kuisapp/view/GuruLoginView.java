@@ -4,17 +4,25 @@
  */
 package com.mycompany.kuisapp.view;
 
+import com.mycompany.kuisapp.DAO.GuruDAO;
+import com.mycompany.kuisapp.DAO.SiswaDAO;
+import com.mycompany.kuisapp.controller.PenggunaController;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author LUTHFI NOVRA
  */
 public class GuruLoginView extends javax.swing.JFrame {
 
+    private PenggunaController penggunaController;
+
     /**
      * Creates new form GuruLoginView
      */
     public GuruLoginView() {
         initComponents();
+        penggunaController = new PenggunaController(new GuruDAO(), new SiswaDAO());
     }
 
     /**
@@ -50,6 +58,12 @@ public class GuruLoginView extends javax.swing.JFrame {
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel2.setPreferredSize(new java.awt.Dimension(800, 600));
+
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Username");
 
@@ -117,9 +131,21 @@ public class GuruLoginView extends javax.swing.JFrame {
 
         jPanel3.setPreferredSize(new java.awt.Dimension(800, 600));
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         jLabel1.setText("Username");
 
         jLabel2.setText("Nama");
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Password");
 
@@ -127,6 +153,12 @@ public class GuruLoginView extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField1ActionPerformed(evt);
             }
         });
 
@@ -204,14 +236,55 @@ public class GuruLoginView extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        GuruKuisView guruKuisView = new GuruKuisView();
-        guruKuisView.setLocationRelativeTo (null);
-        guruKuisView.setVisible (true);
-        this.dispose ();
+                // TODO add your handling code here:
+        String username = jTextField3.getText();
+        char[] password = jPasswordField2.getPassword();
+
+        // Check if any of the fields is empty
+        if (username.isEmpty() || password.length == 0) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if the username contains any space
+        if (!username.matches("^\\S+$")) {
+            JOptionPane.showMessageDialog(this, "Username cannot contain spaces", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Call the controller method to handle registration
+        if(penggunaController.login(username, password, "GURU")){
+            jTextField3.setText("");
+            jPasswordField2.setText("");
+            GuruKuisView guruKuisView = new GuruKuisView();
+            guruKuisView.setLocationRelativeTo(null);
+            guruKuisView.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String username = jTextField1.getText();
+        String nama = jTextField2.getText();
+        char[] password = jPasswordField1.getPassword();
+
+        // Check if any of the fields is empty
+        if (nama.isEmpty() || username.isEmpty() || password.length == 0) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if the username contains any space
+        if (!username.matches("^\\S+$")) {
+            JOptionPane.showMessageDialog(this, "Username cannot contain spaces", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Call the controller method to handle registration
+        penggunaController.register(nama, username, password, "GURU");
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jPasswordField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField2ActionPerformed
@@ -221,18 +294,34 @@ public class GuruLoginView extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         HomeView homeView = new HomeView();
-        homeView.setLocationRelativeTo (null);
-        homeView.setVisible (true);
-        this.dispose ();
+        homeView.setLocationRelativeTo(null);
+        homeView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         HomeView homeView = new HomeView();
-        homeView.setLocationRelativeTo (null);
-        homeView.setVisible (true);
-        this.dispose ();
+        homeView.setLocationRelativeTo(null);
+        homeView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -4,10 +4,21 @@
  */
 package com.mycompany.kuisapp.model;
 
+import com.mycompany.kuisapp.util.Pengguna;
+
 /**
  *
  * @author LUTHFI NOVRA
  */
-public class QuizModel {
+public class Siswa extends Pengguna{
+
+    public Siswa(String nama, String username, String password) {
+        super(nama, username, password);
+    }
+
+    @Override
+    public String getRole() {
+        return "SISWA";
+    }
     
 }

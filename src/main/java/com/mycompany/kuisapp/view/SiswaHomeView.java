@@ -4,17 +4,24 @@
  */
 package com.mycompany.kuisapp.view;
 
+import com.mycompany.kuisapp.model.Siswa;
+
 /**
  *
  * @author diazr
  */
 public class SiswaHomeView extends javax.swing.JFrame {
 
+    private Siswa loggedInSiswa;
     /**
      * Creates new form SiswaHomeView
      */
-    public SiswaHomeView() {
+    public SiswaHomeView(Siswa loggedInSiswa) {
+        this.loggedInSiswa = loggedInSiswa;
         initComponents();
+        
+        jLabel6.setText("Welcome, "+loggedInSiswa.getNama());
+        jButton5.setVisible(false);
     }
 
     /**
@@ -314,7 +321,6 @@ public class SiswaHomeView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SiswaHomeView().setVisible(true);
             }
         });
     }

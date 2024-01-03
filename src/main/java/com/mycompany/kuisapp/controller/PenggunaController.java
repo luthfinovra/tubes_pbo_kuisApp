@@ -8,6 +8,7 @@ import com.mycompany.kuisapp.DAO.GuruDAO;
 import com.mycompany.kuisapp.DAO.SiswaDAO;
 import com.mycompany.kuisapp.model.Guru;
 import com.mycompany.kuisapp.model.Siswa;
+import com.mycompany.kuisapp.util.Pengguna;
 import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -18,6 +19,24 @@ import org.mindrot.jbcrypt.BCrypt;
 public class PenggunaController {
     private final GuruDAO guruDAO;
     private final SiswaDAO siswaDAO;
+    private int loggedInTeacherId;
+    private int loggedInStudentId;
+
+    public int getLoggedInTeacherId() {
+        return loggedInTeacherId;
+    }
+
+    public void setLoggedInTeacherId(int loggedInTeacherId) {
+        this.loggedInTeacherId = loggedInTeacherId;
+    }
+
+    public int getLoggedInStudentId() {
+        return loggedInStudentId;
+    }
+
+    public void setLoggedInStudentId(int loggedInStudentId) {
+        this.loggedInStudentId = loggedInStudentId;
+    }
 
     public PenggunaController(GuruDAO guruDAO, SiswaDAO siswaDAO) {
         this.guruDAO = guruDAO;
@@ -46,22 +65,24 @@ public class PenggunaController {
         JOptionPane.showMessageDialog(null, "Registration successful", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public boolean login(String username, char[] password, String role) {
+    public Pengguna login(String username, char[] password, String role) {
         if (role.equals("GURU")) {
             Guru guru = guruDAO.getGuruByUsername(username);
             if (guru != null && BCrypt.checkpw(new String(password), guru.getPassword())) {
                 JOptionPane.showMessageDialog(null, "login successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-                return true;
+                this.setLoggedInTeacherId(guru.getId());
+                return guru;
             }
         } else if (role.equals("SISWA")) {
             Siswa siswa = siswaDAO.getSiswaByUsername(username);
             if (siswa != null && BCrypt.checkpw(new String(password), siswa.getPassword())) {
                 JOptionPane.showMessageDialog(null, "login successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-                return true;
+                this.setLoggedInStudentId(siswa.getId());
+                return siswa;
             }
         }
 
         JOptionPane.showMessageDialog(null, "Login failed", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
+        return null;
     }
 }

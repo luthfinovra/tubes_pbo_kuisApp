@@ -58,6 +58,7 @@ public class InputKuis extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setFont(new java.awt.Font("League Spartan", 0, 12)); // NOI18N
         jButton1.setText("Simpan");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,7 +104,7 @@ public class InputKuis extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addGap(54, 54, 54)
                 .addComponent(jButton1)
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
         pack();

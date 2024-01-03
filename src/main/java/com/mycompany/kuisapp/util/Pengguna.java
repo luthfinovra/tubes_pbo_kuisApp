@@ -10,6 +10,15 @@ package com.mycompany.kuisapp.util;
  */
 public abstract class Pengguna {
     
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     private String nama;
     private String username;
     private String password;

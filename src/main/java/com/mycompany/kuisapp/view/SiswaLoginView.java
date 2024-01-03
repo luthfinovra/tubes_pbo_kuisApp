@@ -7,6 +7,9 @@ package com.mycompany.kuisapp.view;
 import com.mycompany.kuisapp.DAO.GuruDAO;
 import com.mycompany.kuisapp.DAO.SiswaDAO;
 import com.mycompany.kuisapp.controller.PenggunaController;
+import com.mycompany.kuisapp.model.Guru;
+import com.mycompany.kuisapp.model.Siswa;
+import com.mycompany.kuisapp.util.Pengguna;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
@@ -279,12 +282,14 @@ public class SiswaLoginView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Username cannot contain spaces", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        // Call the controller method to handle registration
-        if(penggunaController.login(username, password, "SISWA")){
+        
+        Pengguna loggedInUser = penggunaController.login(username, password, "SISWA");
+        
+        if(loggedInUser instanceof Siswa){
+            Siswa loggedInSiswa = (Siswa) loggedInUser;
             loginusersiswa.setText("");
             jPasswordField1.setText("");
-            SiswaHomeView siswaHomeView = new SiswaHomeView();
+            SiswaHomeView siswaHomeView = new SiswaHomeView(loggedInSiswa);
             siswaHomeView.setLocationRelativeTo(null);
             siswaHomeView.setVisible(true);
             this.dispose();

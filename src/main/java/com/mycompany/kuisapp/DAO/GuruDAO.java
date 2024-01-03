@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -22,12 +23,26 @@ public class GuruDAO {
     private static final String JDBC_PASSWORD = "";
 
     public void addGuru(Guru guru) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement("INSERT INTO guru (nama, username, password) VALUES (?, ?, ?)")) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement("INSERT INTO guru (nama, username, password) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, guru.getNama());
             statement.setString(2, guru.getUsername());
             statement.setString(3, guru.getPassword());
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Retrieve the generated keys
+
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int generatedId = generatedKeys.getInt(1);
+                        // Set the generated ID to the Guru object
+                        guru.setId(generatedId);
+                        System.out.println(guru.getId());
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             // Handle exceptions appropriately
@@ -58,6 +73,7 @@ public class GuruDAO {
                 String nama = rs.getString("nama");
                 String password = rs.getString("password");
                 guru = new Guru(nama, username, password);
+                guru.setId(rs.getInt("id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

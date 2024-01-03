@@ -7,6 +7,8 @@ package com.mycompany.kuisapp.view;
 import com.mycompany.kuisapp.DAO.GuruDAO;
 import com.mycompany.kuisapp.DAO.SiswaDAO;
 import com.mycompany.kuisapp.controller.PenggunaController;
+import com.mycompany.kuisapp.model.Guru;
+import com.mycompany.kuisapp.util.Pengguna;
 import javax.swing.JOptionPane;
 
 /**
@@ -253,10 +255,15 @@ public class GuruLoginView extends javax.swing.JFrame {
         }
 
         // Call the controller method to handle registration
-        if(penggunaController.login(username, password, "GURU")){
+        Pengguna loggedInUser = penggunaController.login(username, password, "GURU");
+        
+        
+        
+        if(loggedInUser instanceof Guru){
+            Guru loggedInGuru = (Guru) loggedInUser;
             jTextField3.setText("");
             jPasswordField2.setText("");
-            GuruKuisView guruKuisView = new GuruKuisView();
+            GuruKuisView guruKuisView = new GuruKuisView(loggedInGuru);
             guruKuisView.setLocationRelativeTo(null);
             guruKuisView.setVisible(true);
             this.dispose();

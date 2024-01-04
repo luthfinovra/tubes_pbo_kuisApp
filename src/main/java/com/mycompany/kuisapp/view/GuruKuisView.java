@@ -38,7 +38,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel19.setText("Welcome, " + loggedInGuru.getNama());
         jButton3.setVisible(false);
         jButton4.setVisible(false);
-        jButton5.setVisible(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false);
 
@@ -96,15 +95,17 @@ public class GuruKuisView extends javax.swing.JFrame {
 
     private void updateLabelsAndButtonsForQuiz(Quiz quiz) {
         // Logic to update labels and buttons based on the selected quiz
+        QuizController quizController = new QuizController();
+        countSoal = quizController.getQuestionAmount(quiz.getId());
+        
         jLabel2.setText(quiz.getJudul());
         jLabel8.setText(quiz.getDeskripsi());
-        jLabel5.setText("");
+        jLabel5.setText(String.valueOf(countSoal));
         jLabel7.setText("");
 
         // Make buttons visible
         jButton3.setVisible(true);
         jButton4.setVisible(true);
-        jButton5.setVisible(true);
 
         jSpinner2.setValue(quiz.getId());
     }
@@ -185,7 +186,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -261,13 +261,6 @@ public class GuruKuisView extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Detail Kuis");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Jumlah Soal:");
 
         jLabel5.setText("10");
@@ -303,23 +296,19 @@ public class GuruKuisView extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton4))
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -358,8 +347,6 @@ public class GuruKuisView extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7))
                         .addGap(48, 48, 48)
-                        .addComponent(jButton5)
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton3)
                             .addComponent(jButton4))
@@ -550,10 +537,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         int selectedIndex = jList1.getSelectedIndex();
@@ -580,6 +563,7 @@ public class GuruKuisView extends javax.swing.JFrame {
             // Handle no selected item
             JOptionPane.showMessageDialog(this, "Gagal Mengapus Kuis", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        updateQuizList();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -616,6 +600,7 @@ public class GuruKuisView extends javax.swing.JFrame {
             // Handle no selected item
             JOptionPane.showMessageDialog(this, "Gagal Mengapus Soal", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        updateQuestionList();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -690,7 +675,6 @@ public class GuruKuisView extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;

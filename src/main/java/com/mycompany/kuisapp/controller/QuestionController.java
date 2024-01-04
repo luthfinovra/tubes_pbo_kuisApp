@@ -30,4 +30,8 @@ public class QuestionController {
     public boolean deleteQuestionById(int questionId){
         return questionDAO.deleteQuestionById(questionId);
     }
+    
+    public Question getQuestionById(int questionId){
+        return questionDAO.getQuestionById(questionId);
+    }
 }

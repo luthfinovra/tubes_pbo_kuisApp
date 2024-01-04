@@ -37,7 +37,7 @@ public class QuizDAO {
             ps.setString(2, quiz.getDeskripsi());
             ps.setInt(3, quiz.getTeacher_id());
             ps.executeUpdate();
-            
+
             // Get the generated id from the ResultSet
             ResultSet rs = ps.getGeneratedKeys();
             int quizId = -1;
@@ -101,9 +101,34 @@ public class QuizDAO {
         return quizzes;
     }
 
+    public Quiz getQuizById(int quizId) {
+        Quiz quiz = null;
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); 
+                PreparedStatement statement
+                = connection.prepareStatement("SELECT * FROM quiz WHERE id = ?")) {
+            statement.setInt(1, quizId);
+
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            int id = rs.getInt("id");
+            String title = rs.getString("nama");
+            String description = rs.getString("deskripsi");
+            int teacherId = rs.getInt("guru_id");
+            // Add other fields as needed
+
+            quiz = new Quiz(title, description, teacherId);
+            quiz.setId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        return quiz;
+    }
+
     public boolean deleteQuizById(int quizId) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM quiz WHERE id = ?")) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement("DELETE FROM quiz WHERE id = ?")) {
 
             statement.setInt(1, quizId);
 
@@ -117,5 +142,6 @@ public class QuizDAO {
             return false;
         }
     }
+
     // Add other methods as needed
 }

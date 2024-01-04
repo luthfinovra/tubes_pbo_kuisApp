@@ -10,21 +10,11 @@ import com.mycompany.kuisapp.model.Question;
 import com.mycompany.kuisapp.model.Quiz;
 import com.mycompany.kuisapp.model.QuizRow;
 import com.mycompany.kuisapp.model.QuizTableModel;
-import com.mycompany.kuisapp.util.CheckBoxEditor;
-import com.mycompany.kuisapp.util.CheckboxRenderer;
-import java.awt.Component;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -247,12 +237,12 @@ public class InputKuis extends javax.swing.JFrame {
                 System.out.println(quizId + " " + id);
                 try {
                     quizController.associateQuizQuestion(quizId, id);
-                    JOptionPane.showMessageDialog(null, "Berhasil Menambahkan Kuis", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Gagal Menambahkan Kuis", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "Berhasil Menambahkan Kuis", "Success", JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

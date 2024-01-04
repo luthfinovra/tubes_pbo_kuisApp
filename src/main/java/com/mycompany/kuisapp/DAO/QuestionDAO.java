@@ -85,10 +85,39 @@ public class QuestionDAO {
 
         return questions;
     }
-    
+
+    public Question getQuestionById(int questionId) {
+
+        Question question = null;
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); 
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM question WHERE id = ?")) {
+            statement.setInt(1, questionId);
+
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            int id = rs.getInt("id");
+            String question_text = rs.getString("question_text");
+            String option1 = rs.getString("option1");
+            String option2 = rs.getString("option2");
+            String option3 = rs.getString("option3");
+            String option4 = rs.getString("option4");
+            int correct_answer = rs.getInt("correct_answer");
+            int teacher_id = rs.getInt("guru_id");
+            // Add other fields as needed
+
+            question = new Question(question_text, option1, option2, option3, option4, correct_answer, teacher_id);
+            question.setId(id);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        return question;
+    }
+
     public boolean deleteQuestionById(int questionId) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM question WHERE id = ?")) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement("DELETE FROM question WHERE id = ?")) {
 
             statement.setInt(1, questionId);
 

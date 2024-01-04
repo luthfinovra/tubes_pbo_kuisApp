@@ -4,12 +4,15 @@
  */
 package com.mycompany.kuisapp.DAO;
 
+import com.mycompany.kuisapp.model.QuizQuestion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,5 +37,30 @@ public class QuizQuestionDAO {
 
             return true;
         }
+    }
+    
+    
+    public List<QuizQuestion> getQuizQuestion(int quizId) {
+        
+        List<QuizQuestion> quizQuestions = new ArrayList<>();
+        
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); 
+                PreparedStatement statement = 
+                        connection.prepareStatement("SELECT * FROM `quiz_question` WHERE quiz_id = ?")) {
+            statement.setInt(1, quizId);
+
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                int questionId = rs.getInt("question_id");
+
+                QuizQuestion quizQuestion = new QuizQuestion(quizId, questionId);
+                quizQuestions.add(quizQuestion);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+        return quizQuestions;
     }
 }

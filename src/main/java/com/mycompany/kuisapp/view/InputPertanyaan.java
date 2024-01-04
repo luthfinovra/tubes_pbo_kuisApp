@@ -4,16 +4,23 @@
  */
 package com.mycompany.kuisapp.view;
 
+import com.mycompany.kuisapp.controller.QuestionController;
+import com.mycompany.kuisapp.model.Question;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ANGGARA
  */
 public class InputPertanyaan extends javax.swing.JFrame {
 
+    private int teacherId;
+
     /**
      * Creates new form InputPertanyaan
      */
-    public InputPertanyaan() {
+    public InputPertanyaan(int teacherId) {
+        this.teacherId = teacherId;
         initComponents();
     }
 
@@ -37,9 +44,9 @@ public class InputPertanyaan extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(32767, 32767));
@@ -69,12 +76,6 @@ public class InputPertanyaan extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("League Spartan Medium", 0, 12)); // NOI18N
         jLabel6.setText("Jawaban yang benar:");
 
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
-            }
-        });
-
         jButton1.setFont(new java.awt.Font("League Spartan Medium", 0, 12)); // NOI18N
         jButton1.setText("Simpan");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -88,6 +89,8 @@ public class InputPertanyaan extends javax.swing.JFrame {
         jLabel7.setText("Input Pertanyaan");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,8 +102,8 @@ public class InputPertanyaan extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -155,12 +158,12 @@ public class InputPertanyaan extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(71, 71, 71)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(68, 68, 68)
                 .addComponent(jButton1)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         pack();
@@ -170,12 +173,37 @@ public class InputPertanyaan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String questionText = jTextField1.getText();
+        String option1 = jTextField2.getText();
+        String option2 = jTextField3.getText();
+        String option3 = jTextField4.getText();
+        String option4 = jTextField5.getText();
+
+        // Convert the selected option from combo box to a number (1 to 4)
+        String selectedOption = getSelectedOption();
+        int correctOption = convertOptionToNumber(selectedOption);
+        
+        if (questionText.isEmpty() || option1.isEmpty() || option2.isEmpty() || option3.isEmpty() || option4.isEmpty() || correctOption == -1) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Create a Question object
+        Question question = new Question(questionText, option1, option2, option3, option4, correctOption, teacherId);
+
+        // Insert the question into the database using your DAO
+        QuestionController questionController = new QuestionController();
+
+        int generatedId = questionController.addNewQuestion(question, teacherId);
+        // Check if the question was successfully inserted
+        if (generatedId != -1) {
+            JOptionPane.showMessageDialog(null, "Berhasil Menambahkan Soal", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Reset or clear your GUI components as needed
+            resetInputs();
+        } else {
+            JOptionPane.showMessageDialog(this, "Gagal Menambahkan Pertanyaan", "Error", JOptionPane.ERROR_MESSAGE);
+            // Handle the case where the question insertion failed
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -208,13 +236,42 @@ public class InputPertanyaan extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InputPertanyaan().setVisible(true);
             }
         });
     }
 
+    private String getSelectedOption() {
+        System.out.println(jComboBox1.getSelectedItem());
+        return (String) jComboBox1.getSelectedItem();
+    }
+
+    private int convertOptionToNumber(String option) {
+        switch (option) {
+            case "A":
+                return 1;
+            case "B":
+                return 2;
+            case "C":
+                return 3;
+            case "D":
+                return 4;
+            default:
+                return -1; // Handle invalid option
+        }
+    }
+
+    private void resetInputs() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        // Reset other components as needed
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -227,6 +284,5 @@ public class InputPertanyaan extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,19 +9,39 @@ package com.mycompany.kuisapp.controller;
  * @author LUTHFI NOVRA
  */
 import com.mycompany.kuisapp.DAO.QuizDAO;
+import com.mycompany.kuisapp.DAO.QuizQuestionDAO;
 import com.mycompany.kuisapp.model.Quiz;
+import com.mycompany.kuisapp.model.QuizGuru;
+import java.sql.SQLException;
 import java.util.List;
 
 public class QuizController {
     private final QuizDAO quizDAO;
+    private final QuizQuestionDAO quizQuestionDAO;
 
     public QuizController() {
         this.quizDAO = new QuizDAO();
+        this.quizQuestionDAO = new QuizQuestionDAO();
     }
 
+    public List<QuizGuru> getAllQuizzez(){
+        return quizDAO.getAllQuizzes();
+    }
+    
     public List<Quiz> getQuizzesByTeacherId(int teacherId) {
         return quizDAO.getQuizzesByTeacherId(teacherId);
     }
 
+    public int createNewQuiz(Quiz quiz) throws SQLException{
+        return quizDAO.addQuiz(quiz);
+    }
+    
+    public boolean associateQuizQuestion(int quizId, int questionId) throws SQLException{
+        return quizQuestionDAO.addQuizQuestion(quizId, questionId);
+    }
+    
+    public boolean deleteQuizById(int quizId){
+        return quizDAO.deleteQuizById(quizId);
+    }
     // You can add more methods here as needed, such as adding a new quiz, updating a quiz, etc.
 }

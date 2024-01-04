@@ -4,6 +4,28 @@
  */
 package com.mycompany.kuisapp.view;
 
+import com.mycompany.kuisapp.controller.QuestionController;
+import com.mycompany.kuisapp.controller.QuizController;
+import com.mycompany.kuisapp.model.Question;
+import com.mycompany.kuisapp.model.Quiz;
+import com.mycompany.kuisapp.model.QuizRow;
+import com.mycompany.kuisapp.model.QuizTableModel;
+import com.mycompany.kuisapp.util.CheckBoxEditor;
+import com.mycompany.kuisapp.util.CheckboxRenderer;
+import java.awt.Component;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
 /**
  *
  * @author ANGGARA
@@ -13,8 +35,48 @@ public class InputKuis extends javax.swing.JFrame {
     /**
      * Creates new form InputQuiz
      */
-    public InputKuis() {
+    private QuizTableModel tableModel;
+    private int guruId;
+    private final JCheckBox checkBox = new JCheckBox();
+
+    public InputKuis(int guruId) {
         initComponents();
+        this.guruId = guruId;
+
+        QuestionController questionController = new QuestionController();
+        // Assuming you have a method to retrieve questions from the database
+        List<Question> questionRows = questionController.getQuestionsByTeacherId(guruId);
+
+        // Create QuizRow objects based on QuestionRow objects
+        List<QuizRow> quizRows = convertToQuizRows(questionRows);
+
+        // Set up the table with your QuizTableModel and data
+        tableModel = new QuizTableModel();
+        tableModel.setData(quizRows);
+        jTable1.setModel(tableModel);
+
+        jTable1.getColumnModel().getColumn(0).setHeaderValue("Check");
+        jTable1.getColumnModel().getColumn(2).setHeaderValue("Pertanyaan");
+
+        jTable1.getTableHeader().repaint();
+
+        jTable1.getColumnModel().getColumn(1).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(1).setMaxWidth(0);
+        jTable1.getColumnModel().getColumn(1).setWidth(0);
+
+        jTable1.getColumnModel().getColumn(0).setMinWidth(50);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
+        jTable1.getColumnModel().getColumn(0).setWidth(50);
+
+    }
+
+    private List<QuizRow> convertToQuizRows(List<Question> questionRows) {
+        List<QuizRow> quizRows = new ArrayList<>();
+        for (Question questionRow : questionRows) {
+            QuizRow quizRow = new QuizRow(false, questionRow.getId(), questionRow.getQuestion_text());
+            quizRows.add(quizRow);
+        }
+        return quizRows;
     }
 
     /**
@@ -26,22 +88,29 @@ public class InputKuis extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel7 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Input Kuis");
+        setMinimumSize(new java.awt.Dimension(800, 600));
 
-        jLabel7.setFont(new java.awt.Font("League Spartan ExtraBold", 0, 36)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Input Kuis");
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel1.setMaximumSize(new java.awt.Dimension(1200, 900));
+        jPanel1.setMinimumSize(new java.awt.Dimension(800, 600));
 
-        jLabel1.setFont(new java.awt.Font("League Spartan Medium", 0, 12)); // NOI18N
-        jLabel1.setText("Judul Kuis         :");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Input Kuis");
+
+        jLabel2.setText("Judul:");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -49,16 +118,10 @@ public class InputKuis extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("League Spartan Medium", 0, 12)); // NOI18N
-        jLabel2.setText("Deskripsi Kuis  :");
+        jLabel3.setText("Deskripsi:");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
+        jLabel4.setText("Soal:");
 
-        jButton1.setFont(new java.awt.Font("League Spartan", 0, 12)); // NOI18N
         jButton1.setText("Simpan");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,45 +129,79 @@ public class InputKuis extends javax.swing.JFrame {
             }
         });
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(302, 302, 302)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(351, 351, 351)
+                        .addComponent(jButton1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(49, 49, 49)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(29, 29, 29)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField2)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(145, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(jLabel1)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(47, 47, 47)
+                .addComponent(jButton1)
+                .addGap(57, 57, 57))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(295, 295, 295)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(135, 135, 135)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(354, 354, 354)
-                        .addComponent(jButton1)))
-                .addContainerGap(177, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(54, 54, 54)
-                .addComponent(jButton1)
-                .addContainerGap(95, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -114,12 +211,49 @@ public class InputKuis extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String judul = jTextField1.getText();
+        String deskripsi = jTextField2.getText();
+
+        if (judul.isEmpty() || deskripsi.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Quiz quiz = new Quiz(judul, deskripsi, guruId);
+
+        QuizController quizController = new QuizController();
+
+        int quizId = -1;
+        try {
+            quizId = quizController.createNewQuiz(quiz);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Gagal Menambahkan Kuis", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        List<QuizRow> quizRows = tableModel.getData();
+
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            // Get the quiz row object from the table model
+            QuizRow quizRow = tableModel.getQuizRow(i);
+
+            // Check if the quiz row is selected
+            if (quizRow.isSelected()) {
+                // Get the question id from the quiz row
+                int id = quizRow.getQuestionId();
+
+                // Do something with the question id
+                System.out.println(quizId + " " + id);
+                try {
+                    quizController.associateQuizQuestion(quizId, id);
+                    JOptionPane.showMessageDialog(null, "Berhasil Menambahkan Kuis", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Gagal Menambahkan Kuis", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -151,18 +285,19 @@ public class InputKuis extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InputKuis().setVisible(true);
-            }
-        });
+        //java.awt.EventQueue.invokeLater(new Runnable() {
+        //});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables

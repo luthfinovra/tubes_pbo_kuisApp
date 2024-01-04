@@ -19,22 +19,51 @@ import java.util.List;
  * @author LUTHFI NOVRA
  */
 public class QuestionDAO {
-   private static final String JDBC_URL = "jdbc:mysql://127.0.0.1/kuisApp";
+
+    private static final String JDBC_URL = "jdbc:mysql://127.0.0.1/kuisApp";
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "";
 
-    public void addQuiz(Quiz quiz) {
-        // Implement the logic to add a quiz to the database
+    public int addQuestion(Question question, int teacherId) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO question (question_text, option1, option2, option3, option4, correct_answer, guru_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, question.getQuestion_text());
+            statement.setString(2, question.getOption1());
+            statement.setString(3, question.getOption2());
+            statement.setString(4, question.getOption3());
+            statement.setString(5, question.getOption4());
+            statement.setInt(6, question.getCorrect_answer());
+            statement.setInt(7, teacherId);
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Retrieve the generated keys
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        // Return the generated ID
+                        return generatedKeys.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        // Return -1 to indicate failure
+        return -1;
     }
 
     public List<Question> getQuestionByTeacherId(int teacherId) {
         List<Question> questions = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); 
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM question WHERE guru_id = ?")) {
-                statement.setInt(1, teacherId);
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement statement = connection.prepareStatement("SELECT * FROM question WHERE guru_id = ?")) {
+            statement.setInt(1, teacherId);
 
-                ResultSet rs = statement.executeQuery();
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String question_text = rs.getString("question_text");
@@ -56,5 +85,21 @@ public class QuestionDAO {
 
         return questions;
     }
-  
+    
+    public boolean deleteQuestionById(int questionId) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM question WHERE id = ?")) {
+
+            statement.setInt(1, questionId);
+
+            int rowsAffected = statement.executeUpdate();
+
+            return rowsAffected > 0;  // Returns true if at least one row is affected (i.e., the question is deleted)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+            return false;
+        }
+    }
 }

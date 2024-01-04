@@ -18,8 +18,16 @@ public class QuestionController {
     public QuestionController() {
         this.questionDAO = new QuestionDAO();
     }
+    
+    public int addNewQuestion(Question question, int teacherId){
+        return questionDAO.addQuestion(question, teacherId);
+    }
 
     public List<Question> getQuestionsByTeacherId(int teacherId) {
         return questionDAO.getQuestionByTeacherId(teacherId);
+    }
+    
+    public boolean deleteQuestionById(int questionId){
+        return questionDAO.deleteQuestionById(questionId);
     }
 }

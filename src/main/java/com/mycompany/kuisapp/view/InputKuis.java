@@ -244,6 +244,7 @@ public class InputKuis extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(null, "Berhasil Menambahkan Kuis", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -241,7 +241,6 @@ public class InputPertanyaan extends javax.swing.JFrame {
     }
 
     private String getSelectedOption() {
-        System.out.println(jComboBox1.getSelectedItem());
         return (String) jComboBox1.getSelectedItem();
     }
 

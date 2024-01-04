@@ -39,7 +39,6 @@ public class GuruDAO {
                         int generatedId = generatedKeys.getInt(1);
                         // Set the generated ID to the Guru object
                         guru.setId(generatedId);
-                        System.out.println(guru.getId());
                     }
                 }
             }

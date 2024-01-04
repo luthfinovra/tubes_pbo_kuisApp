@@ -6,6 +6,7 @@ package com.mycompany.kuisapp.view;
 
 import com.mycompany.kuisapp.controller.QuizController;
 import com.mycompany.kuisapp.model.Quiz;
+import com.mycompany.kuisapp.model.QuizGrade;
 import com.mycompany.kuisapp.model.QuizGuru;
 import com.mycompany.kuisapp.model.Siswa;
 import java.util.List;
@@ -29,6 +30,7 @@ public class SiswaHomeView extends javax.swing.JFrame {
         initComponents();
         
         jLabel6.setText("Welcome, "+loggedInSiswa.getNama());
+        jLabel7.setText("Welcome, "+loggedInSiswa.getNama());
         jButton5.setVisible(false);
         
         jLabel2.setText("");
@@ -36,41 +38,93 @@ public class SiswaHomeView extends javax.swing.JFrame {
         jLabel5.setText("");
         jLabel15.setText("");
         jLabel16.setVisible(false);
+        jLabel17.setText("");
+        jLabel18.setText("");
+        jLabel19.setText("");
         
+        jButton2.setVisible(false);
         updateQuizList();
+        updateGradeView();
     }
 
     private void updateQuizList() {
-        // Assuming you have a DefaultListModel<String> for your JList
+        jLabel2.setText("");
+        jLabel8.setText("");
+        jLabel15.setText("");
+        jLabel5.setText("");
+
+        jLabel16.setText("");
+        jButton5.setVisible(false);
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
-        QuizController quizController = new QuizController();
-        // Fetch quizzes from the database
+        QuizController quizController = new QuizController();  
         List<QuizGuru> quizzes = quizController.getAllQuizzez();
-
-        // Populate the JList with quiz titles
+        
         for (QuizGuru quiz : quizzes) {
             listModel.addElement(quiz.getQuiz().getJudul());
         }
-
-        // Set the model to your JList
+        
         jList1.setModel(listModel);
 
-        // Add ListSelectionListener to jList1
         jList1.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    // User has selected an item, update corresponding labels and buttons
+                    
                     int selectedIndex = jList1.getSelectedIndex();
                     if (selectedIndex != -1) {
-                        // Logic to update labels and buttons based on the selected quiz
+                       
                         QuizGuru selectedQuiz = quizzes.get(selectedIndex);
                         updateLabelsAndButtonsForQuiz(selectedQuiz);
                     }
                 }
             }
         });
+    }
+    
+    private void updateGradeView(){
+        jLabel17.setText("");
+        jLabel18.setText("");
+        jLabel19.setText("");
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+
+        QuizController quizController = new QuizController();  
+        List<QuizGrade> quizGrade = quizController.getAttemptedQuizByStudentId(loggedInSiswa.getId());
+        
+        for (QuizGrade grade : quizGrade) {
+            
+            Quiz quiz = quizController.getQuizById(grade.getQuiz_id());
+            listModel.addElement(quiz.getJudul());
+        }
+        
+        jList2.setModel(listModel);
+
+        
+        jList2.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    
+                    int selectedIndex = jList2.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                       
+                        QuizGrade selectedQuiz = quizGrade.get(selectedIndex);
+                        updateLabelsAndButtonsForGrade(selectedQuiz);
+                    }
+                }
+            }
+        });
+    }
+    
+    private void updateLabelsAndButtonsForGrade(QuizGrade grade){
+        QuizController quizController = new QuizController();
+        
+        Quiz quiz = quizController.getQuizById(grade.getQuiz_id());
+        
+        
+        jLabel17.setText(quiz.getJudul());
+        jLabel18.setText(String.valueOf(quizController.getQuestionAmount(quiz.getId())));
+        jLabel19.setText(String.valueOf(grade.getGrade()));
     }
     
     private void updateLabelsAndButtonsForQuiz(QuizGuru quiz) {
@@ -121,6 +175,10 @@ public class SiswaHomeView extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -163,6 +221,11 @@ public class SiswaHomeView extends javax.swing.JFrame {
         jLabel6.setText("Welcome, User");
 
         jButton3.setText("Perbarui Daftar Kuis");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Guru:");
 
@@ -188,13 +251,13 @@ public class SiswaHomeView extends javax.swing.JFrame {
                                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(194, 194, 194))
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(96, 96, 96)))))
                         .addGap(27, 27, 27))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -275,6 +338,19 @@ public class SiswaHomeView extends javax.swing.JFrame {
 
         jLabel13.setText("Kuis Yang Sudah Dikerjakan ");
 
+        jButton4.setText("Perbarui Daftar Nilai");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Judul Kuis");
+
+        jLabel18.setText("jLabel18");
+
+        jLabel19.setText("100");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -286,19 +362,30 @@ public class SiswaHomeView extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(58, 58, 58)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
-                        .addContainerGap(348, Short.MAX_VALUE))
+                            .addComponent(jButton2)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(40, 40, 40)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(46, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18))))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addComponent(jButton4)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,14 +400,22 @@ public class SiswaHomeView extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(27, 27, 27)
-                        .addComponent(jLabel10)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel17))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel11)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel18))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel12)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel19))
                         .addGap(30, 30, 30)
                         .addComponent(jButton2)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Daftar Nilai", jPanel3);
@@ -341,13 +436,15 @@ public class SiswaHomeView extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
+        SiswaLoginView siswaLoginView = new SiswaLoginView();
+        siswaLoginView.setLocationRelativeTo(null);
+        siswaLoginView.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        QuizAttemptView quizAttemptView = new QuizAttemptView((Integer.parseInt(jLabel16.getText())));
-        System.out.println(Integer.parseInt(jLabel16.getText()));
+        QuizAttemptView quizAttemptView = new QuizAttemptView((Integer.parseInt(jLabel16.getText())), loggedInSiswa);
         quizAttemptView.setLocationRelativeTo(this);
         quizAttemptView.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         quizAttemptView.setVisible(true);
@@ -360,6 +457,16 @@ public class SiswaHomeView extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        updateGradeView();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        updateQuizList();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -399,6 +506,7 @@ public class SiswaHomeView extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -408,6 +516,9 @@ public class SiswaHomeView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

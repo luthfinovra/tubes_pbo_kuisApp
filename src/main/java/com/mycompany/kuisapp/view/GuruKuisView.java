@@ -24,6 +24,7 @@ public class GuruKuisView extends javax.swing.JFrame {
     private Guru loggedInGuru;
 
     private int countSoal;
+    private int countSiswa;
 
     /**
      * Creates new form GuruKuisView
@@ -61,7 +62,15 @@ public class GuruKuisView extends javax.swing.JFrame {
     }
 
     private void updateQuizList() {
-        // Assuming you have a DefaultListModel<String> for your JList
+        jLabel2.setText("");
+        jLabel8.setText("");
+        jLabel5.setText("");
+        jLabel7.setText("");
+
+        // Make buttons visible
+        jButton3.setVisible(false);
+        jButton4.setVisible(false);
+        
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         QuizController quizController = new QuizController();
@@ -97,11 +106,12 @@ public class GuruKuisView extends javax.swing.JFrame {
         // Logic to update labels and buttons based on the selected quiz
         QuizController quizController = new QuizController();
         countSoal = quizController.getQuestionAmount(quiz.getId());
-        
+        countSiswa = quizController.getStudentAttemptedQuiz(quiz.getId());
+
         jLabel2.setText(quiz.getJudul());
         jLabel8.setText(quiz.getDeskripsi());
         jLabel5.setText(String.valueOf(countSoal));
-        jLabel7.setText("");
+        jLabel7.setText(String.valueOf(countSiswa));
 
         // Make buttons visible
         jButton3.setVisible(true);
@@ -111,6 +121,18 @@ public class GuruKuisView extends javax.swing.JFrame {
     }
 
     private void updateQuestionList() {
+        jLabel10.setText("");
+        jLabel11.setText("");
+        jLabel12.setText("");
+        jLabel13.setText("");
+        jLabel14.setText("");
+        jLabel15.setText("");
+        jLabel16.setText("");
+        jLabel17.setText("");
+        
+        jButton8.setVisible(false);
+        jButton9.setVisible(false);
+        
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
         QuestionController questionController = new QuestionController();

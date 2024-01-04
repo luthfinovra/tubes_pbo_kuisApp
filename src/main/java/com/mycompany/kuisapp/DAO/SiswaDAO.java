@@ -37,7 +37,6 @@ public class SiswaDAO {
                         int generatedId = generatedKeys.getInt(1);
                         // Set the generated ID to the Guru object
                         siswa.setId(generatedId);
-                        System.out.println(siswa.getId());
                     }
                 }
             }

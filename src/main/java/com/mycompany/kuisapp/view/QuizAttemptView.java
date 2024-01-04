@@ -4,12 +4,20 @@
  */
 package com.mycompany.kuisapp.view;
 
+import com.mycompany.kuisapp.DAO.QuizResponseDAO;
 import com.mycompany.kuisapp.controller.QuestionController;
 import com.mycompany.kuisapp.controller.QuizController;
 import com.mycompany.kuisapp.model.Question;
 import com.mycompany.kuisapp.model.Quiz;
+import com.mycompany.kuisapp.model.QuizGrade;
 import com.mycompany.kuisapp.model.QuizQuestion;
+import com.mycompany.kuisapp.model.QuizResponses;
+import com.mycompany.kuisapp.model.Siswa;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,18 +34,24 @@ public class QuizAttemptView extends javax.swing.JFrame {
     private QuestionController questionController;
     private int countSoal;
     private Quiz quiz;
-    
-    public QuizAttemptView(int quizId) {
+    private List<String> studentAnswers;
+    private Siswa loggedInSiswa;
+
+    public QuizAttemptView(int quizId, Siswa loggedInSiswa) {
         initComponents();
-        
+
         this.quizController = new QuizController();
         this.questionController = new QuestionController();
-        this.quizQuestions =  quizController.getQuizQuestion(quizId);
+        this.quizQuestions = quizController.getQuizQuestion(quizId);
         this.currentQuestionIndex = 0;
         this.quiz = quizController.getQuizById(quizQuestions.get(0).getQuiz_id());
-        showQuestion(currentQuestionIndex);
-        
         this.countSoal = quizController.getQuestionAmount(quizId);
+        this.studentAnswers = new ArrayList<>(Collections.nCopies(countSoal, null));
+
+        this.loggedInSiswa = loggedInSiswa;
+
+        showQuestion(currentQuestionIndex);
+
     }
 
     private void showQuestion(int index) {
@@ -45,14 +59,60 @@ public class QuizAttemptView extends javax.swing.JFrame {
         QuizQuestion quizQuestion = quizQuestions.get(index);
         Question question = questionController.getQuestionById(quizQuestion.getQuestion_id());
         jLabel1.setText(quiz.getJudul());
-        jLabel2.setText("Soal "+String.valueOf(index+1));
+        jLabel2.setText("Soal " + String.valueOf(index + 1));
         jLabel3.setText(question.getQuestion_text());
-        
+
         jRadioButton1.setText(question.getOption1());
         jRadioButton2.setText(question.getOption2());
         jRadioButton3.setText(question.getOption3());
         jRadioButton4.setText(question.getOption4());
+
+        buttonGroup1.clearSelection();
+        String selectedAnswer = studentAnswers.get(index);
+        if (selectedAnswer != null) {
+            switch (selectedAnswer) {
+                case "1":
+                    jRadioButton1.setSelected(true);
+                    break;
+                case "2":
+                    jRadioButton2.setSelected(true);
+                    break;
+                case "3":
+                    jRadioButton3.setSelected(true);
+                    break;
+                case "4":
+                    jRadioButton4.setSelected(true);
+                    break;
+                // Handle other cases if needed
+            }
+        }
+        
+        if(index == 0){
+            jButton2.setVisible(false);
+        }else{
+            jButton2.setVisible(true);
+        }
+        
+        if(index == countSoal-1){
+            jButton1.setVisible(false);
+        }else{
+            jButton1.setVisible(true);
+        }
     }
+
+    private void saveAnswer(int index) {
+        // Save the selected answer for the current question
+        if (jRadioButton1.isSelected()) {
+            studentAnswers.set(index, "1");
+        } else if (jRadioButton2.isSelected()) {
+            studentAnswers.set(index, "2");
+        } else if (jRadioButton3.isSelected()) {
+            studentAnswers.set(index, "3");
+        } else if (jRadioButton4.isSelected()) {
+            studentAnswers.set(index, "4");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,7 +138,6 @@ public class QuizAttemptView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel1.setLayout(new java.awt.CardLayout());
 
@@ -136,25 +195,22 @@ public class QuizAttemptView extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(25, 25, 25)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(339, 339, 339)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(78, 78, 78)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(25, 25, 25)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -196,6 +252,11 @@ public class QuizAttemptView extends javax.swing.JFrame {
         });
 
         jButton3.setText("Finish Quiz");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -207,7 +268,7 @@ public class QuizAttemptView extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3)
-                .addGap(257, 257, 257)
+                .addGap(260, 260, 260)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18))
         );
@@ -229,6 +290,7 @@ public class QuizAttemptView extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         if (currentQuestionIndex > 0) {
+            saveAnswer(currentQuestionIndex);
             currentQuestionIndex--;
             showQuestion(currentQuestionIndex);
         }
@@ -237,6 +299,7 @@ public class QuizAttemptView extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         if (currentQuestionIndex < quizQuestions.size() - 1) {
+            saveAnswer(currentQuestionIndex);
             currentQuestionIndex++;
             showQuestion(currentQuestionIndex);
         }
@@ -257,6 +320,46 @@ public class QuizAttemptView extends javax.swing.JFrame {
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        Question question = null;
+        boolean answer = false;
+        float grade = 0;
+        float sum = 0;
+        try {
+            saveAnswer(currentQuestionIndex);
+            for (int i = 0; i < studentAnswers.size(); i++) {
+                String selectedAnswer = studentAnswers.get(i);
+                if (selectedAnswer != null) {
+                    int chosenAnswer = Integer.parseInt(selectedAnswer);
+
+                    question = questionController.getQuestionById(quizQuestions.get(i).getQuestion_id());
+                    answer = chosenAnswer == question.getCorrect_answer();
+                    QuizResponses response = new QuizResponses(loggedInSiswa.getId(), quiz.getId(),
+                            quizQuestions.get(i).getQuestion_id(), chosenAnswer, answer);
+
+                    if(answer){
+                        sum+=10;
+                    }
+                    
+                    quizController.saveResponse(response);
+                }
+            }
+            
+            grade = (sum / (10*countSoal))*100;
+            
+            QuizGrade studentGrade = new QuizGrade(loggedInSiswa.getId(), quizQuestions.get(0).getQuiz_id(), grade);
+
+            
+            quizController.setGrade(studentGrade);
+            
+            JOptionPane.showMessageDialog(this, "Kuis Berhasil  Di Submit!");
+            this.dispose();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

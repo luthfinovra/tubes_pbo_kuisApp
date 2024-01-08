@@ -56,6 +56,7 @@ public class SiswaLoginView extends javax.swing.JFrame {
         jPasswordField2 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Masuk Sebagai Siswa");
 
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(800, 600));
 

@@ -34,4 +34,8 @@ public class QuestionController {
     public Question getQuestionById(int questionId){
         return questionDAO.getQuestionById(questionId);
     }
+    
+    public boolean updateQuestionById(int questionId, Question question){
+        return questionDAO.updateQuestionById(questionId, question);
+    }
 }

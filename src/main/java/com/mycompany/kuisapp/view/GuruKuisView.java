@@ -37,7 +37,6 @@ public class GuruKuisView extends javax.swing.JFrame {
 
         jLabel18.setText("Welcome, " + loggedInGuru.getNama());
         jLabel19.setText("Welcome, " + loggedInGuru.getNama());
-        jButton3.setVisible(false);
         jButton4.setVisible(false);
         jButton8.setVisible(false);
         jButton9.setVisible(false);
@@ -68,7 +67,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel7.setText("");
 
         // Make buttons visible
-        jButton3.setVisible(false);
         jButton4.setVisible(false);
         
         DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -114,7 +112,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel7.setText(String.valueOf(countSiswa));
 
         // Make buttons visible
-        jButton3.setVisible(true);
         jButton4.setVisible(true);
 
         jSpinner2.setValue(quiz.getId());
@@ -138,7 +135,7 @@ public class GuruKuisView extends javax.swing.JFrame {
         QuestionController questionController = new QuestionController();
         // Fetch quizzes from the database
         List<Question> questions = questionController.getQuestionsByTeacherId(loggedInGuru.getId());
-
+        
         // Populate the JList with quiz titles
         for (Question question : questions) {
             listModel.addElement(question.getQuestion_text());
@@ -147,6 +144,10 @@ public class GuruKuisView extends javax.swing.JFrame {
         // Set the model to your JList
         jList2.setModel(listModel);
 
+        if(jList2.getListSelectionListeners().length != 0){
+            jList2.removeListSelectionListener(jList2.getListSelectionListeners()[0]);
+        }
+        
         jList2.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -206,7 +207,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -269,13 +269,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel4.setText("Deskripsi:");
         jLabel4.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jButton3.setText("Ubah");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         jButton4.setText("Delete");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -321,8 +314,7 @@ public class GuruKuisView extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -369,9 +361,7 @@ public class GuruKuisView extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7))
                         .addGap(48, 48, 48)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4))
+                        .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
@@ -428,6 +418,11 @@ public class GuruKuisView extends javax.swing.JFrame {
         jLabel17.setText("a. Void");
 
         jButton8.setText("Ubah");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setText("Delete");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -625,10 +620,6 @@ public class GuruKuisView extends javax.swing.JFrame {
         updateQuestionList();
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         InputPertanyaan inputPertanyaanView = new InputPertanyaan(loggedInGuru.getId());
@@ -654,6 +645,17 @@ public class GuruKuisView extends javax.swing.JFrame {
         // TODO add your handling code here:
         updateQuizList();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        QuestionController questionController = new QuestionController();
+        Question question = questionController.getQuestionById((int)jSpinner1.getValue());
+        UpdatePertanyaan updatePertanyaan = new UpdatePertanyaan(question);
+        
+        updatePertanyaan.setLocationRelativeTo(this);
+        updatePertanyaan.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        updatePertanyaan.setVisible(true);
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -695,7 +697,6 @@ public class GuruKuisView extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;

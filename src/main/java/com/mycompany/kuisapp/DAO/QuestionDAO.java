@@ -131,4 +131,30 @@ public class QuestionDAO {
             return false;
         }
     }
+    
+    public boolean updateQuestionById(int questionId, Question question){
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); 
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE question SET question_text = ?, option1 = ?, option2 = ?, option3 = ?, option4 = ?, correct_answer = ? WHERE id = ?")){
+            
+            statement.setString(1, question.getQuestion_text());
+            statement.setString(2, question.getOption1());
+            statement.setString(3, question.getOption2());
+            statement.setString(4, question.getOption3());
+            statement.setString(5, question.getOption4());
+            statement.setInt(6, question.getCorrect_answer());
+            
+            statement.setInt(7, questionId);
+            
+            int rowAffected = statement.executeUpdate();
+            
+            return rowAffected > 0;
+        }catch (SQLException e){
+            e.printStackTrace();
+            
+            return false;
+        }
+    }
+    
+    
 }

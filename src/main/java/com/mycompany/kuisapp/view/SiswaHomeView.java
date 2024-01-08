@@ -181,6 +181,7 @@ public class SiswaHomeView extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Daftar Kuis");
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Kuis 1", "Kuis 2", "Kuis 3", "Kuis 4", "Kuis 5" };

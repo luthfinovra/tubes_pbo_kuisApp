@@ -137,6 +137,7 @@ public class QuizAttemptView extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Pengerjaan Kuis");
         setMinimumSize(new java.awt.Dimension(800, 600));
 
         jPanel1.setLayout(new java.awt.CardLayout());

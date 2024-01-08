@@ -234,7 +234,6 @@ public class InputKuis extends javax.swing.JFrame {
                 int id = quizRow.getQuestionId();
 
                 // Do something with the question id
-                System.out.println(quizId + " " + id);
                 try {
                     quizController.associateQuizQuestion(quizId, id);
                 } catch (SQLException ex) {
